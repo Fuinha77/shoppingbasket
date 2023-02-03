@@ -2,6 +2,7 @@ package com.interview.shoppingbasket;
 
 class CheckoutContext {
     private Basket basket;
+    private Promotion promotion;
     private double retailPriceTotal = 0.0;
 
     public void setRetailPriceTotal(double retailPriceTotal) {
@@ -12,6 +13,10 @@ class CheckoutContext {
         this.basket = basket;
     }
 
+    CheckoutContext(Promotion promotion) {
+        this.promotion = promotion;
+    }
+
     public PaymentSummary paymentSummary() {
         return new PaymentSummary(retailPriceTotal);
     }
@@ -20,4 +25,6 @@ class CheckoutContext {
     public Basket getBasket() {
         return basket;
     }
+
+    public Promotion getPromotion(){return promotion;}
 }
