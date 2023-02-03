@@ -1,10 +1,10 @@
 package com.interview.shoppingbasket;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BasketTest {
     @Test
@@ -36,7 +36,7 @@ public class BasketTest {
 
         List<BasketItem> basketSize = basket.getItems();
 
-        assertEquals(basketSize.size(),3);
+        assertEquals(basketSize.size(), 3);
         assertEquals(basketSize.get(0).getProductCode(), "productCode");
         assertEquals(basketSize.get(0).getProductName(), "myProduct");
         assertEquals(basketSize.get(0).getQuantity(), 10);
@@ -50,6 +50,26 @@ public class BasketTest {
 
     @Test
     void consolidateBasketTest() {
-        // Exercise - implement the unit test for consolidate items
+        Basket basket = new Basket();
+        basket.add("productCode", "myProduct", 10);
+        basket.add("productCode", "myProduct", 10);
+        basket.add("productCode", "myProduct", 10);
+        basket.add("productCode2", "myProduct2", 10);
+        basket.add("productCode3", "myProduct3", 10);
+        basket.add("productCode3", "myProduct3", 10);
+
+        final var consolidatedItems = basket.consolidateItems();
+
+        assertEquals(consolidatedItems.size(), 3);
+        assertEquals(consolidatedItems.get(0).getProductCode(), "productCode");
+        assertEquals(consolidatedItems.get(0).getProductName(), "myProduct");
+        assertEquals(consolidatedItems.get(0).getQuantity(), 30);
+        assertEquals(consolidatedItems.get(1).getProductCode(), "productCode2");
+        assertEquals(consolidatedItems.get(1).getProductName(), "myProduct2");
+        assertEquals(consolidatedItems.get(1).getQuantity(), 10);
+        assertEquals(consolidatedItems.get(2).getProductCode(), "productCode3");
+        assertEquals(consolidatedItems.get(2).getProductName(), "myProduct3");
+        assertEquals(consolidatedItems.get(2).getQuantity(), 20);
+
     }
 }

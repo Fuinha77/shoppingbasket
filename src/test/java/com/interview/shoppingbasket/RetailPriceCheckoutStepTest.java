@@ -1,24 +1,29 @@
 package com.interview.shoppingbasket;
 
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 public class RetailPriceCheckoutStepTest {
 
     PricingService pricingService;
     CheckoutContext checkoutContext;
     Basket basket;
+    Promotion promotion;
 
     @BeforeEach
     void setup() {
         pricingService = Mockito.mock(PricingService.class);
         checkoutContext = Mockito.mock(CheckoutContext.class);
         basket = new Basket();
+        promotion = new Promotion();
 
         when(checkoutContext.getBasket()).thenReturn(basket);
+        when(checkoutContext.getPromotion()).thenReturn(promotion);
     }
 
     @Test
@@ -34,16 +39,21 @@ public class RetailPriceCheckoutStepTest {
     @Test
     void setPriceOfProductToBasketItem() {
 
-        basket.add("product1", "myproduct1", 10);
-        basket.add("product2", "myproduct2", 10);
+        basket.add("product1", "myProduct1", 10);
+
+        Promotion promotion = new Promotion();
+        PromotionType promotionTypeMockPercentage = PromotionType.builder()
+                .id(1L)
+                .description("Percentage")
+                .build();
+        promotion.add(1L,"product1", "myProduct1", promotionTypeMockPercentage, 50);
+        List<PromotionItem> promotionItemSize = promotion.getPromotions(basket);
 
         when(pricingService.getPrice("product1")).thenReturn(3.99);
-        when(pricingService.getPrice("product2")).thenReturn(2.0);
         RetailPriceCheckoutStep retailPriceCheckoutStep = new RetailPriceCheckoutStep(pricingService);
 
         retailPriceCheckoutStep.execute(checkoutContext);
-        Mockito.verify(checkoutContext).setRetailPriceTotal(3.99*10+2*10);
-
+        Mockito.verify(checkoutContext).setRetailPriceTotal((3.99 - (3.99 * (50 / 100))* 10));
     }
 
 }
