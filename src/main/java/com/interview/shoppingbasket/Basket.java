@@ -20,7 +20,7 @@ public class Basket {
         return items;
     }
 
-    public void consolidateItems() {
+    public List<BasketItem> consolidateItems() {
         final var distinctItems = this.getItems().stream()
                 .distinct()
                 .collect(Collectors.toList());
@@ -28,7 +28,7 @@ public class Basket {
         distinctItems.forEach(consolidatedItem ->
                 consolidatedItem.setQuantity(this.sumBasketItemQuantity(consolidatedItem)));
 
-        items = distinctItems;
+        return distinctItems;
     }
 
     private int sumBasketItemQuantity(final BasketItem consolidatedItem) {
