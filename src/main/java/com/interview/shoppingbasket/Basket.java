@@ -2,6 +2,7 @@ package com.interview.shoppingbasket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Basket {
     private List<BasketItem> items = new ArrayList<>();
@@ -20,6 +21,19 @@ public class Basket {
     }
 
     public void consolidateItems() {
-        // Exercise - implement this function
+        final var distinctItems = this.getItems().stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        distinctItems.forEach(consolidatedItem ->
+                consolidatedItem.setQuantity(this.sumBasketItemQuantity(consolidatedItem)));
+
+        items = distinctItems;
+    }
+
+    private int sumBasketItemQuantity(final BasketItem consolidatedItem) {
+        return items.stream()
+                .filter(basketItem -> consolidatedItem.getProductCode().equals(basketItem.getProductCode()))
+                .mapToInt(BasketItem::getQuantity).sum();
     }
 }
